@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+	<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- 只有接口声明：namespace值必须和接口名相同 -->
+<mapper namespace="com.example.demo.jinx.singleUser.SingleUserMapper">
+
+	<!-- public SingleUserEntity getSingleUser(SingleUserEntity entity); -->
+	<select id="getSingleUser" resultMap="singleUserMap">
+		select 
+			*
+		from 
+			singleuser 
+		<where>
+			<if test="id != null">
+				id=#{id}
+			</if>
+			<if test="userId != null">
+				userid=#{userId}
+			</if>
+		</where>	
+	</select>
+	
+	<!-- public Integer setSingleUser(SingleUserEntity entity); -->
+	<insert id="setSingleUser" parameterType="com.example.demo.jinx.singleUser.SingleUserEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO singleuser 
+		VALUES (
+			null,
+			#{userId},
+			NOW()
+		)ON DUPLICATE KEY UPDATE 
+		registerdate=NOW();  
+	</insert>
+	<!-- public Integer DelSingleUser(String registerDate); -->
+	<delete id="DelSingleUser">
+		DELETE FROM 
+			singleuser 
+		WHERE 
+			registerdate=#{registerDate}
+	</delete>
+	
+	<resultMap type="com.example.demo.jinx.singleUser.SingleUserEntity" id="singleUserMap">
+		<id 	property="id" 			column="id"/>
+		<result property="userId" 		column="userid"/>
+		<result property="registerDate" 	column="registerdate"/>
+	</resultMap>  
+	
+</mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	

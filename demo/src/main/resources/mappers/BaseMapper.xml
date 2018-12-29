@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+	<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+		"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- 只有接口声明：namespace值必须和接口名相同 -->
+<mapper namespace="com.example.demo.jinx.general.BaseMapper">
+
+	<!-- public BaseEntity getUser(BaseEntity entity); -->
+	<select id="getUser" resultMap="baseMap">
+		select 
+			u.*,
+			r.name as rname
+		from 
+			user u
+		LEFT JOIN 
+        	sys_role_user sru 
+        on u.id= sru.Sys_User_id
+        LEFT JOIN 
+        	Sys_Role r 
+        on sru.Sys_Role_id=r.id
+		<where>
+			<if test="userName != null">
+				username=#{userName} 
+			</if>
+			<if test="id != null">
+				and u.id=#{id} 
+			</if>
+		</where>
+	</select>
+	
+	<!-- public Integer updateUser(PersonalEntity entity); -->
+	<update id="updateUser" parameterType="com.example.demo.jinx.general.BaseEntity">
+		UPDATE 
+			user 
+		SET 
+			<if test="userName != null">
+				username=#{userName} 
+			</if>
+			<if test="sex != null">
+				sex=#{sex}
+			</if>
+			<if test="phone != null">
+				phone=#{phone}
+			</if>
+			<if test="email != null">
+				email=#{email}
+			</if>
+			<if test="birthday != null">
+				birthday=#{birthday}
+			</if>
+			<if test="userImage != null">
+				userImage=#{userImage}
+			</if>
+			<if test="newPassword != null">
+				password=#{newPassword}
+			</if>
+		where
+			id=#{id}
+	</update>
+	
+	<resultMap type="com.example.demo.jinx.general.BaseEntity" id="baseMap">
+		<id 	property="id" 			column="id"/>
+		<result property="userName" 	column="username"/>
+		<result property="password" 	column="password"/>
+		<result property="userImage" 	column="userimage"/>
+		<result property="sex" 			column="sex"/>
+		<result property="phone" 		column="phone"/>
+		<result property="email" 		column="email"/>
+		<result property="birthday" 	column="birthday"/>
+		<result property="mender" 		column="mender"/>
+		<result property="updateDate" 	column="updatedate"/>
+		<result property="creator" 		column="creator"/>
+		<result property="createDate" 	column="createdate"/>
+		<collection property="roles" ofType="com.example.demo.jinx.general.SysRole">
+            <result column="name" property="rname"/>
+        </collection>
+	</resultMap>  
+</mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	

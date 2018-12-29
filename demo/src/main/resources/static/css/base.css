@@ -1,0 +1,26 @@
+html, body, div, ul, li, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ol, form, input, textarea, th, td, select {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+	background: url(/image/xiaoxin.jpg);
+	background-repeat:no-repeat; 
+	background-size:cover;
+	/* ¹Ì¶¨±³¾°Í¼ */
+	background-attachment:fixed;
+}
+
+.bodys{
+
+}
+
+.formInput{
+	height:30px;
+	width:200px;
+}
+
+.formBut{
+	width:80px;
+	height:30px;
+}

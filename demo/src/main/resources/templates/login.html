@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>login</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/navigation.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/leftNavigation.css}" />
+</head>
+<style>
+.inTest{
+	width:200px;
+	height:30px;	
+	margin:6px auto;
+}
+.loginDiv{
+	width:400px;
+	border-style:solid;
+	margin:6px auto;
+	padding:3px;
+	position:relative;
+	background:pink; 
+	top:100px;
+}
+.captchaImage{
+	width:130px;
+	position:absolute;
+	bottom:50px;
+}
+.inBut{
+	position:relative;
+	left:100px;
+	width:100px;
+	height:40px;
+}
+.inPass{
+	position:relative;
+	left:3px;
+}
+</style>
+<body>
+	<div class="bodys">
+		<!-- 引入左侧导航栏 -->
+		<div th:replace="leftNavigation :: html"></div>
+		<div class="loginDiv">
+			<!-- <form th:action="@{/Login/login}" method="post" id="loginForm"> -->
+			<form th:action="@{/Login/login}" method="post" id="loginForm">
+				<span>用户名:</span>
+				<input class="inTest" type="text" id="userName" name="userName"/><br/>
+				<span>密&nbsp;&nbsp;&nbsp;码:</span>
+				<input class="inTest inPass" type="text" id="password" name="password"/><br/>
+				<span>验证码:</span>
+				<input class="inTest" type="text" id="captcha" name="captcha"/>
+				<!-- 验证码 -->
+				<img class="captchaImage" id="captchaImage" alt="验证码" 
+					th:src="@{captcha.jpg}" onclick="changCaptcha()"/><br/>
+				<input class="inBut" type="button" id="loginBut" value="登陆"/>
+			</form>
+		</div>
+	</div>
+</body>
+<script th:src="@{/js/jquery-1.10.2.min.js}" type="text/javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+	/* 更换验证码地址,重新获取验证码图片 */	
+	function changCaptcha() {
+		console.log("$(#captchaImage).click(function(){");
+		$("#captchaImage").attr("src", "captcha.jpg?d=" + $.now());
+	}
+	
+	/* 检查用户名是否存在 */
+	$("#userName").blur(function(){
+		$.ajax({
+			url:[[@{checkUserName}]],
+			data:"userName="+$("#userName").val(),
+			type:"get",
+			dataType:"json",
+			success:function(obj){
+				if(obj.state == 0){
+					$("#loginBut").removeAttr("disabled");
+				}else{
+					$("#loginBut").attr("disabled","disabled");
+				}
+				
+					$("#message").html(obj.message);
+			}
+		});
+	})
+		
+	$("#loginBut").click(function(){
+		$.ajax({
+			url:[[@{/Login/login}]],
+			data:$("#loginForm").serialize(),
+			type:"post",
+			dataType:"json",
+			success:function(obj){
+				if(obj.state==0){
+					location=[[@{/}]];
+					}else{
+						changCaptcha()
+					}
+				$("#message").html(obj.message);
+			}
+		});
+	});
+	
+	/* function loginBut(){
+		$.ajax({
+			url:[[@{login}]],
+			data:$("#loginForm").serialize(),
+			type:"post",
+			dataType:"json",
+			success:function(obj){
+				if(obj.state==0){
+					location=[[@{/}]];
+					}else{
+						changCaptcha()
+					}
+				$("#message").html(obj.message);
+			}
+		});
+	} */
+	
+	/* 键盘监听 */
+	$(document).keydown(function(event){
+	　　　　console.log(event.keyCode);
+		if(event.keyCode==13)
+			loginBut();
+	　　});
+</script>
+</html>
